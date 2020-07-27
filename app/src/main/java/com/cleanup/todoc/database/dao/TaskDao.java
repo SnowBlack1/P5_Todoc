@@ -14,7 +14,7 @@ import java.util.List;
  public interface TaskDao {
 
  @Query("SELECT * FROM Task WHERE projectId = :projectId")
- LiveData<List<Task>> getTasks (long projectId); // get tasks list (list type = LiveData)
+ LiveData<List<Task>> getTasksWithProjectId (long projectId); // get tasks list (list type = LiveData)
 
  @Query("SELECT * FROM Task")
  LiveData<List<Task>> getTasks();

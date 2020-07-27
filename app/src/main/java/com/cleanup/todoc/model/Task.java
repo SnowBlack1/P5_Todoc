@@ -1,5 +1,6 @@
 package com.cleanup.todoc.model;
 
+import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.ForeignKey;
 import android.arch.persistence.room.PrimaryKey;
@@ -21,9 +22,18 @@ public class Task {
     @PrimaryKey (autoGenerate = true) //Auto. generate an id for each task
     private long id;
 
+    public long getProjectId() {
+        return projectId;
+    }
+
+    public long getCreationTimestamp() {
+        return creationTimestamp;
+    }
+
     /**
      * The unique identifier of the project associated to the task
      */
+    @ColumnInfo (index = true)
     private long projectId;
 
     /**
@@ -37,6 +47,7 @@ public class Task {
     /**
      * The timestamp when the task has been created
      */
+    @ColumnInfo (name = "creation_date")
     private long creationTimestamp;
 
     /**
