@@ -13,11 +13,15 @@ public class ProjectRepository {
 
     private ProjectDao projectDao;
 
-    //CONSTRUCTOR
-    public ProjectRepository(Context context) {
-        TodocDatabase db = TodocDatabase.getInstance(context);
-        projectDao = (ProjectDao) getProjects(); // ??????
+    public ProjectRepository(ProjectDao dao) {
+        this.projectDao = dao;
     }
+
+    //CONSTRUCTOR
+    //public ProjectRepository(Context context) {
+        //odocDatabase db = TodocDatabase.getInstance(context);
+        //projectDao = db.mProjectDao(); // j'ai pas de getDao dans projectRepository
+    //}
 
     //--- GET ---
     public LiveData<Project> getProjectWithId(long projectId) {

@@ -65,7 +65,7 @@ public abstract class TodocDatabase extends RoomDatabase {
             int color2 = Color.argb(255, rnd.nextInt(256), rnd.nextInt(256), rnd.nextInt(256));
             int color3 = Color.argb(255, rnd.nextInt(256), rnd.nextInt(256), rnd.nextInt(256));
 
-            db.insertProject(new Project("Tartampion",color1)); // ne fonctionne pas
+            //db.insertProject(new Project("Tartampion",color1)); // ne fonctionne pas
             db.insertProject(new Project("Lucidia",color2));
             db.insertProject(new Project("Circus",color3));
 

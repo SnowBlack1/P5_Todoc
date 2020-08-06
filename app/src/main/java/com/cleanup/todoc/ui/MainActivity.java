@@ -1,5 +1,8 @@
 package com.cleanup.todoc.ui;
 
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProvider;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -18,12 +21,18 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.cleanup.todoc.R;
+import com.cleanup.todoc.database.TodocDatabase;
+import com.cleanup.todoc.database.dao.ProjectDao;
+import com.cleanup.todoc.database.dao.TaskDao;
 import com.cleanup.todoc.model.Project;
 import com.cleanup.todoc.model.Task;
+import com.cleanup.todoc.viewModel.DI;
+import com.cleanup.todoc.viewModel.TodocViewModel;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 
 /**
  * <p>Home activity of the application which is displayed when the user opens the app.</p>
@@ -32,21 +41,30 @@ import java.util.Date;
  * @author Gaëtan HERFRAY
  */
 public class MainActivity extends AppCompatActivity implements TasksAdapter.DeleteTaskListener {
+
+    private TodocDatabase mDatabase;
+    private ProjectDao mProjectDao;
+    private TaskDao mTaskDao;
+    private TodocViewModel mViewModel;
+private List<Project> mProjectList;
+
     /**
      * List of all projects available in the application
      */
     private final Project[] allProjects = Project.getAllProjects();
-
+    //private List<Project> projects = new ArrayList<>();
     /**
      * List of all current tasks of the application
      */
     @NonNull
-    private final ArrayList<Task> tasks = new ArrayList<>();
+    private final List<Task> tasks = new ArrayList<>();
+    //private final ArrayList<Task> tasks = new ArrayList<>();
 
     /**
      * The adapter which handles the list of tasks
      */
     private final TasksAdapter adapter = new TasksAdapter(tasks, this);
+    //private TasksAdapter adapter;
 
     /**
      * The sort method to be used to display tasks
@@ -94,6 +112,8 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
 
         setContentView(R.layout.activity_main);
 
+        mViewModel = ViewModelProviders.of(this).get(TodocViewModel.class); //donne acces au viewModel
+
         listTasks = findViewById(R.id.list_tasks);
         lblNoTasks = findViewById(R.id.lbl_no_task);
 
@@ -105,6 +125,10 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
             public void onClick(View view) {
                 showAddTaskDialog();
             }
+        });
+
+        mViewModel.getProjects().observe(this, projects -> {
+            mProjectList = projects;
         });
     }
 
@@ -131,6 +155,9 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
         updateTasks();
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void configureViewModel() {
     }
 
     @Override
@@ -178,11 +205,11 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
                 dialogInterface.dismiss();
             }
             // If name has been set, but project has not been set (this should never occur)
-            else{
+            else {
                 dialogInterface.dismiss();
             }
         }
-        // If dialog is aloready closed
+        // If dialog is already closed
         else {
             dialogInterface.dismiss();
         }
