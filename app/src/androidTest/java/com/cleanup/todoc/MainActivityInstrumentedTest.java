@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.cleanup.todoc.ui.MainActivity;
+import com.cleanup.todoc.viewModel.TodocViewModel;
 
 import org.junit.Rule;
 import org.junit.Test;
@@ -30,12 +31,16 @@ import static org.junit.Assert.assertThat;
  */
 @RunWith(AndroidJUnit4.class)
 public class MainActivityInstrumentedTest {
+
+    private TodocViewModel testTodocViewModel;
     @Rule
     public ActivityTestRule<MainActivity> rule = new ActivityTestRule<>(MainActivity.class);
 
     @Test
     public void addAndRemoveTask() {
         MainActivity activity = rule.getActivity();
+        String testTaskName = "Test task";
+        //testTodocViewModel = activity.getViewModel();
         TextView lblNoTask = activity.findViewById(R.id.lbl_no_task);
         RecyclerView listTasks = activity.findViewById(R.id.list_tasks);
 

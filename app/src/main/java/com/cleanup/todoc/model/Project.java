@@ -18,7 +18,7 @@ public class Project {
     /**
      * The unique identifier of the project
      */
-    @PrimaryKey(autoGenerate = true) // Auto. generate an id for each project
+    @PrimaryKey(autoGenerate = false) // Auto. generate an id for each project
     private long id;
 
     /**

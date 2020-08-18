@@ -28,6 +28,7 @@ import com.cleanup.todoc.model.Project;
 import com.cleanup.todoc.model.Task;
 import com.cleanup.todoc.viewModel.DI;
 import com.cleanup.todoc.viewModel.TodocViewModel;
+import com.cleanup.todoc.viewModel.ViewModelFactory;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -46,7 +47,7 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
     private ProjectDao mProjectDao;
     private TaskDao mTaskDao;
     private TodocViewModel mViewModel;
-private List<Project> mProjectList;
+    private List<Project> mProjectList;
 
     /**
      * List of all projects available in the application
@@ -57,7 +58,7 @@ private List<Project> mProjectList;
      * List of all current tasks of the application
      */
     @NonNull
-    private final List<Task> tasks = new ArrayList<>();
+    private List<Task> tasks = new ArrayList<>();
     //private final ArrayList<Task> tasks = new ArrayList<>();
 
     /**
@@ -112,7 +113,11 @@ private List<Project> mProjectList;
 
         setContentView(R.layout.activity_main);
 
-        mViewModel = ViewModelProviders.of(this).get(TodocViewModel.class); //donne acces au viewModel
+        //Access to the ViewModel
+        //mViewModel = ViewModelProviders.of(this).get(TodocViewModel.class);
+
+        configureViewModel();
+        getTasks();
 
         listTasks = findViewById(R.id.list_tasks);
         lblNoTasks = findViewById(R.id.lbl_no_task);
@@ -127,9 +132,9 @@ private List<Project> mProjectList;
             }
         });
 
-        mViewModel.getProjects().observe(this, projects -> {
-            mProjectList = projects;
-        });
+       // mViewModel.getProjects().observe(this, projects -> {
+           // mProjectList = projects;
+        //});
     }
 
     @Override
@@ -152,18 +157,18 @@ private List<Project> mProjectList;
             sortMethod = SortMethod.RECENT_FIRST;
         }
 
-        updateTasks();
+        //updateTasks();
+        updateTasks(tasks);
 
         return super.onOptionsItemSelected(item);
     }
 
-    private void configureViewModel() {
-    }
 
     @Override
     public void onDeleteTask(Task task) {
         tasks.remove(task);
-        updateTasks();
+        //updateTasks();
+        deleteTask(task);
     }
 
     /**
@@ -190,16 +195,16 @@ private List<Project> mProjectList;
             // If both project and name of the task have been set
             else if (taskProject != null) {
                 // TODO: Replace this by id of persisted task
-                long id = (long) (Math.random() * 50000);
+                //long id = (long) (Math.random() * 50000);
 
 
                 Task task = new Task(
-                        id,
                         taskProject.getId(),
                         taskName,
                         new Date().getTime()
                 );
 
+                mViewModel.createTask(task);
                 addTask(task);
 
                 dialogInterface.dismiss();
@@ -236,14 +241,14 @@ private List<Project> mProjectList;
      */
     private void addTask(@NonNull Task task) {
         tasks.add(task);
-        updateTasks();
+        //updateTasks();
     }
 
     /**
      * Updates the list of tasks in the UI
      */
-    private void updateTasks() {
-        if (tasks.size() == 0) {
+    private void updateTasks(List<Task> mTasks) {
+        if (mTasks.size() == 0) {
             lblNoTasks.setVisibility(View.VISIBLE);
             listTasks.setVisibility(View.GONE);
         } else {
@@ -266,6 +271,26 @@ private List<Project> mProjectList;
             }
             adapter.updateTasks(tasks);
         }
+    }
+
+    private void deleteTask(Task task){
+        this.mViewModel.deleteTask(task.getId());
+    }
+
+    private void configureViewModel(){
+        ViewModelFactory mViewModelFactory = DI.provideViewModelFactory(this);
+        this.mViewModel = ViewModelProviders.of(this, mViewModelFactory).get(TodocViewModel.class);
+        this.mViewModel.initProjects();
+    }
+
+    private void getTasks(){
+        this.mViewModel.getTasks().observe(this, this::updateTasksList);
+        this.mViewModel.getTasks().observe(this, this::updateTasks);
+    }
+
+    private void updateTasksList(List<Task> tasks){
+        this.tasks = tasks;
+        this.adapter.updateTasks(tasks);
     }
 
     /**
