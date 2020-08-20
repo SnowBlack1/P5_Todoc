@@ -8,6 +8,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import java.util.Comparator;
+import java.util.List;
 
 /**
  * <p>Model for the tasks of the application.</p>
@@ -96,8 +97,12 @@ public class Task {
      * @return the project associated to the task
      */
     @Nullable
-    public Project getProject() {
-        return Project.getProjectById(projectId);
+    public Project getProject(List<Project> projects) {
+        for (Project project: projects){
+            if (project.getId() == projectId)
+                return project;
+        }
+        return null;
     }
 
     /**

@@ -8,13 +8,17 @@ import com.cleanup.todoc.database.dao.ProjectDao;
 import com.cleanup.todoc.model.Project;
 
 import java.util.List;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 public class ProjectRepository {
 
     private ProjectDao projectDao;
+    private Executor mExecutor;
 
     public ProjectRepository(ProjectDao dao) {
         this.projectDao = dao;
+        this.mExecutor = Executors.newSingleThreadExecutor();
     }
 
     //CONSTRUCTOR
@@ -24,26 +28,22 @@ public class ProjectRepository {
     //}
 
     //--- GET ---
-    public LiveData<Project> getProjectWithId(long projectId) {
-        return this.projectDao.getProjectWithId(projectId);
-    }
-
-    public LiveData<List<Project>> getProjects() {
-        return this.projectDao.getProjects();
+    public  LiveData<List<Project>> getAllProjects() {
+        return this.projectDao.getAllProjects();
     }
 
     //--- INSERT ---
     public void insertProject(Project project) {
-        this.projectDao.insertProject(project);
+        this.mExecutor.execute(() -> projectDao.insertProject(project));
     }
 
     //--- UPDATE ---
     public void updateProject(Project project) {
-        this.projectDao.updateProject(project);
+        this.mExecutor.execute(() -> projectDao.updateProject(project));
     }
 
     //--- DELETE ---
-    public void deleteProject(long idProject) {
-        this.projectDao.deleteProject(idProject);
+    public void deleteProject(Project project) {
+        this.mExecutor.execute(() -> projectDao.deleteProject(project));
     }
 }

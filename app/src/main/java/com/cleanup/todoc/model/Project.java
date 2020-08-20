@@ -1,6 +1,7 @@
 package com.cleanup.todoc.model;
 
 import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.ColorInt;
 import android.support.annotation.NonNull;
@@ -14,11 +15,10 @@ import android.support.annotation.Nullable;
 @Entity(tableName = "Project")
 public class Project {
 
-
     /**
      * The unique identifier of the project
      */
-    @PrimaryKey(autoGenerate = false) // Auto. generate an id for each project
+    @PrimaryKey(autoGenerate = true) // Auto. generate an id for each project
     private long id;
 
     /**
@@ -40,7 +40,20 @@ public class Project {
      * @param name  the name of the project to set
      * @param color the hex (ARGB) code of the color associated to the project to set
      */
-   public Project( @NonNull String name, @ColorInt int color) {
+    @Ignore
+   public Project(long id, @NonNull String name, @ColorInt int color) {
+        this.id = id;
+        this.name = name;
+        this.color = color;
+    }
+
+    /**
+     * Instantiates a new Project with auto generated id.
+     *
+     * @param name  the name of the project to set
+     * @param color the hex (ARGB) code of the color associated to the project to set
+     */
+    public Project(@NonNull String name, @ColorInt int color) {
         this.name = name;
         this.color = color;
     }
@@ -50,14 +63,14 @@ public class Project {
      *
      * @return all the projects of the application
      */
-    @NonNull
-    public static Project[] getAllProjects() {
-        return new Project[]{
-                new Project("Projet Tartampion", 0xFFEADAD1),
-                new Project("Projet Lucidia", 0xFFB4CDBA),
-                new Project( "Projet Circus", 0xFFA3CED2),
-        };
-    }
+    //@NonNull
+    //public static Project[] getAllProjects() {
+    //    return new Project[]{
+    //            new Project("Projet Tartampion", 0xFFEADAD1),
+    //            new Project("Projet Lucidia", 0xFFB4CDBA),
+    //            new Project( "Projet Circus", 0xFFA3CED2),
+    //    };
+    //}
 
     /**
      * Returns the project with the given unique identifier, or null if no project with that
@@ -66,14 +79,14 @@ public class Project {
      * @param id the unique identifier of the project to return
      * @return the project with the given unique identifier, or null if it has not been found
      */
-    @Nullable
-    public static Project getProjectById(long id) {
-        for (Project project : getAllProjects()) {
-            if (project.id == id)
-                return project;
-        }
-        return null;
-    }
+    //@Nullable
+    //public static Project getProjectById(long id) {
+    //    for (Project project : getAllProjects()) {
+    //        if (project.id == id)
+    //            return project;
+    //    }
+    //    return null;
+    //}
 
     /**
      * Returns the unique identifier of the project.

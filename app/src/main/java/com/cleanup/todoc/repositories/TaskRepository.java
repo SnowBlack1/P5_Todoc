@@ -6,41 +6,38 @@ import com.cleanup.todoc.database.dao.TaskDao;
 import com.cleanup.todoc.model.Task;
 
 import java.util.List;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 public class TaskRepository {
 
     private TaskDao taskDao;
+    private Executor mExecutor;
 
     //CONSTRUCTOR
     public TaskRepository(TaskDao taskDao) {
         this.taskDao = taskDao;
+        this.mExecutor = Executors.newSingleThreadExecutor();
     }
 
     //GET
-    public LiveData<List<Task>> getTaskWithProjectId(long projectId) {
-        return this.taskDao.getTasksWithProjectId(projectId);
+    public LiveData<List<Task>> getAllTasks() {
+        return this.taskDao.getAllTasks();
     }
 
-    public LiveData<List<Task>> getTask() {
-        return this.taskDao.getTasks();
-    }
-    // --- CREATE ---
-    public void createTask(Task task) {
-        this.taskDao.insertTask(task);
-    }
 
     //INSERT
     public void insertTask(Task task) {
-        this.taskDao.insertTask(task);
+        this.mExecutor.execute(() -> taskDao.insertTask(task));
     }
 
     //UPDATE
     public void updateTask(Task task) {
-        this.taskDao.updateTask(task);
+        this.mExecutor.execute(() -> taskDao.updateTask(task));
     }
 
     //DELETE
-    public void deleteTask(long taskId) {
-        this.taskDao.deleteTask(taskId);
+    public void deleteTask(Task task) {
+        this.mExecutor.execute(() -> taskDao.deleteTask(task));
     }
 }
