@@ -1,9 +1,19 @@
 package com.cleanup.todoc;
 
+import android.content.Context;
+
+import androidx.arch.core.executor.testing.InstantTaskExecutorRule;
+import androidx.room.Room;
+
+import com.cleanup.todoc.database.TodocDatabase;
 import com.cleanup.todoc.model.Project;
 import com.cleanup.todoc.model.Task;
 
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.runner.manipulation.Ordering;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -21,12 +31,12 @@ import static org.junit.Assert.assertSame;
  * @author Gaëtan HERFRAY
  */
 public class TaskUnitTest {
+
     private List<Project> projects = Arrays.asList(
             new Project(1L, "Projet Tartampion", 0xFFEADAD1),
             new Project(2L, "Projet Lucidia", 0xFFB4CDBA),
             new Project(3L, "Projet Circus", 0xFFA3CED2)
     );
-
 
     @Test
     public void test_projects() {

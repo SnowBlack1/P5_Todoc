@@ -1,13 +1,13 @@
 package com.cleanup.todoc.viewModel;
 
 import android.app.Application;
-import android.arch.lifecycle.AndroidViewModel;
-import android.arch.lifecycle.LiveData;
-import android.arch.lifecycle.ViewModel;
-import android.support.annotation.NonNull;
+import androidx.lifecycle.AndroidViewModel;
+import androidx.lifecycle.LiveData;
+import androidx.annotation.NonNull;
 
 import com.cleanup.todoc.model.Project;
 import com.cleanup.todoc.repositories.ProjectRepository;
+import com.cleanup.todoc.service.DI;
 
 import java.util.List;
 
