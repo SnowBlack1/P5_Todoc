@@ -19,12 +19,6 @@ public class ProjectRepository {
         this.mExecutor = Executors.newSingleThreadExecutor();
     }
 
-    //CONSTRUCTOR
-    //public ProjectRepository(Context context) {
-        //odocDatabase db = TodocDatabase.getInstance(context);
-        //projectDao = db.mProjectDao(); // j'ai pas de getDao dans projectRepository
-    //}
-
     //--- GET ---
     public  LiveData<List<Project>> getAllProjects() {
         return this.projectDao.getAllProjects();

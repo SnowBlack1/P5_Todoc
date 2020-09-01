@@ -10,7 +10,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.cleanup.todoc.R;
-import com.cleanup.todoc.database.TodocDatabase;
 import com.cleanup.todoc.model.Project;
 import com.cleanup.todoc.model.Task;
 
@@ -22,8 +21,6 @@ import java.util.List;
  * @author Gaëtan HERFRAY
  */
 public class TasksAdapter extends RecyclerView.Adapter<TasksAdapter.TaskViewHolder> {
-
-    TodocDatabase mDatabase;
 
     /**
      * The list of tasks the adapter deals with
@@ -51,7 +48,6 @@ public class TasksAdapter extends RecyclerView.Adapter<TasksAdapter.TaskViewHold
         this.tasks = tasks;
         this.projectsList = projects;
         this.deleteTaskListener = deleteTaskListener;
-
     }
 
     /**

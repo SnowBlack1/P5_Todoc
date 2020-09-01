@@ -25,7 +25,6 @@ public class TaskRepository {
         return this.taskDao.getAllTasks();
     }
 
-
     //INSERT
     public void insertTask(Task task) {
         this.mExecutor.execute(() -> taskDao.insertTask(task));

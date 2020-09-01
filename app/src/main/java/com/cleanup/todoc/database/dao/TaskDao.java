@@ -12,26 +12,26 @@ import com.cleanup.todoc.model.Task;
 import java.util.List;
 
 @Dao
- public interface TaskDao {
+public interface TaskDao {
 
- //@Query("SELECT * FROM Task WHERE projectId = :projectId")
- //LiveData<List<Task>> getTasksWithProjectId (long projectId); // get tasks list (list type = LiveData)
+    @Query("SELECT * FROM Task")
+    LiveData<List<Task>> getAllTasks();
 
- @Query("SELECT * FROM Task")
- LiveData<List<Task>> getAllTasks();
+    /**
+     * Creates a new task & Room generates an id for us (autoGenerate = true)
+     */
+    @Insert
+    long insertTask(Task task);
 
- @Insert
- long insertTask(Task task); //create a new task + Room generates an id for us
+    /**
+     * Updates a task.
+     * Need an id so that Room finds it in the database & updates it.
+     */
+    @Update
+    int updateTask(Task task);
 
- @Update
- int updateTask (Task task); // update a task + need an id to Room find it in DB & update it
-
- @Delete
- int deleteTask(Task task);
-
-
-
-
+    @Delete
+    int deleteTask(Task task);
 
 
 }

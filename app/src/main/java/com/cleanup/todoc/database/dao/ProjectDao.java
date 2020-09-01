@@ -4,7 +4,6 @@ import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
-import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import androidx.room.Update;
 
@@ -14,10 +13,6 @@ import java.util.List;
 
 @Dao
 public interface ProjectDao {
-
-    //@Insert (onConflict = OnConflictStrategy.REPLACE) //Overwrite a project who already exists with the same id from the project we want to insert
-    //void createProject (Project project);
-
 
     @Query("SELECT * FROM Project")
     LiveData<List<Project>> getAllProjects();

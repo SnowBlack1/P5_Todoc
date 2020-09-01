@@ -1,14 +1,17 @@
 package com.cleanup.todoc.ui;
 
 import androidx.lifecycle.ViewModelProviders;
+
 import android.content.DialogInterface;
 import android.os.Bundle;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -19,19 +22,15 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.cleanup.todoc.R;
-import com.cleanup.todoc.database.TodocDatabase;
-import com.cleanup.todoc.database.dao.ProjectDao;
-import com.cleanup.todoc.database.dao.TaskDao;
 import com.cleanup.todoc.model.Project;
 import com.cleanup.todoc.model.Task;
 import com.cleanup.todoc.viewModel.ProjectViewModel;
 import com.cleanup.todoc.viewModel.TaskViewModel;
 
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
-import java.util.List;
+
 
 /**
  * <p>Home activity of the application which is displayed when the user opens the app.</p>
@@ -41,29 +40,21 @@ import java.util.List;
  */
 public class MainActivity extends AppCompatActivity implements TasksAdapter.DeleteTaskListener {
 
-    private TodocDatabase mDatabase;
-    private ProjectDao mProjectDao;
-    private TaskDao mTaskDao;
-    //private TodocViewModel mViewModel;
-    private List<Project> mProjectList;
-
     /**
      * List of all projects available in the application
      */
-    //private final Project[] allProjects = Project.getAllProjects();
     private ArrayList<Project> allProjects = new ArrayList<>();
+
     /**
      * List of all current tasks of the application
      */
     @NonNull
-    //private List<Task> tasks = new ArrayList<>();
     private ArrayList<Task> tasks = new ArrayList<>();
 
     /**
      * The adapter which handles the list of tasks
      */
     private final TasksAdapter adapter = new TasksAdapter(tasks, allProjects, this);
-    //private TasksAdapter adapter;
 
     /**
      * The ViewModel which handles the tasks repository
@@ -115,47 +106,23 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
     @NonNull
     private TextView lblNoTasks;
 
-    //public static final String KEY_SORT_METHOD = "KEY_SORT_METHOD";
-
-
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main);
 
-        //Access to the ViewModel
-        //mViewModel = ViewModelProviders.of(this).get(TodocViewModel.class);
-
-        //configureViewModel();
-        //getTasks();
-
         listTasks = findViewById(R.id.list_tasks);
         lblNoTasks = findViewById(R.id.lbl_no_task);
 
         initData();
-        //checkSavedInstanceState(savedInstanceState);
 
         listTasks.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         listTasks.setAdapter(adapter);
 
-        findViewById(R.id.fab_add_task).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                showAddTaskDialog();
-            }
-        });
+        findViewById(R.id.fab_add_task).setOnClickListener(view -> showAddTaskDialog());
 
-        // mViewModel.getProjects().observe(this, projects -> {
-        // mProjectList = projects;
-        //});
     }
-
-    //@Override
-    //public void onSaveInstanceState(Bundle savedInstanceState) {
-    //    savedInstanceState.putInt(KEY_SORT_METHOD, sortMethod.getMode());
-    //    super.onSaveInstanceState(savedInstanceState);
-    //}
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -181,11 +148,8 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
         return super.onOptionsItemSelected(item);
     }
 
-
     @Override
     public void onDeleteTask(Task task) {
-        //tasks.remove(task);
-        //deleteTask(task);
         this.taskViewModel.delete(task);
         updateTasks();
     }
@@ -202,35 +166,11 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
         });
 
         this.projectViewModel = ViewModelProviders.of(this).get(ProjectViewModel.class);
-        this.projectViewModel.getAllProjects().observe(this,p -> { // p= observer
+        this.projectViewModel.getAllProjects().observe(this, p -> { // p= observer
             allProjects.clear();
             allProjects.addAll(p);
         });
     }
-
-    //private void checkSavedInstanceState(@Nullable Bundle savedInstanceState) {
-    //    if (savedInstanceState != null) {
-    //        switch (savedInstanceState.getInt(KEY_SORT_METHOD)) {
-    //            case 1:
-    //                sortMethod = SortMethod.ALPHABETICAL;
-    //                break;
-    //            case 2:
-    //                sortMethod = SortMethod.ALPHABETICAL_INVERTED;
-    //                break;
-    //            case 3:
-    //                sortMethod = SortMethod.RECENT_FIRST;
-    //                break;
-    //            case 4:
-    //                sortMethod = SortMethod.OLD_FIRST;
-    //                break;
-    //            default:
-    //                sortMethod = SortMethod.NONE;
-    //                break;
-    //        }
-    //        updateTasks();
-    //        savedInstanceState.clear();
-    //    }
-    //}
 
     /**
      * Called when the user clicks on the positive button of the Create Task Dialog.
@@ -300,8 +240,6 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
      * @param task the task to be added to the list
      */
     private void addTask(@NonNull Task task) {
-        //tasks.add(task);
-        //updateTasks();
         this.taskViewModel.insert(task);
         updateTasks();
     }
@@ -334,26 +272,6 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
             adapter.updateTasks(tasks);
         }
     }
-
-    //private void deleteTask(Task task){
-    //    this.mViewModel.deleteTask(task.getId());
-    //}
-//
-    //private void configureViewModel(){
-    //    ViewModelFactory mViewModelFactory = DI.provideViewModelFactory(this);
-    //    this.mViewModel = ViewModelProviders.of(this, mViewModelFactory).get(TodocViewModel.class);
-    //    this.mViewModel.initProjects();
-    //}
-//
-    //private void getTasks(){
-    //    this.mViewModel.getTasks().observe(this, this::updateTasksList);
-    //    this.mViewModel.getTasks().observe(this, this::updateTasks);
-    //}
-//
-    //private void updateTasksList(ArrayList<Task> tasks){
-    //    this.tasks = tasks;
-    //    this.adapter.updateTasks(tasks);
-    //}
 
     /**
      * Returns the dialog allowing the user to create a new task.
